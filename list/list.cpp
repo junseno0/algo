@@ -62,10 +62,12 @@ template <typename T> class List{
     int deduplicate();
     //make elements unique in a sorting list
     void uniquity();
-    //visit member by iterator
+    //visit members normally
     void traverse();
+    //visit members by function call
     void traverse(void (*visit) (T&));
-    template <typename VST> void traverse(VST& visit);//TODO
+    //visit members by function object where class object overloads () operator
+    template <typename VST> void traverse(const VST& visit);//const is required.
     //sort all with inserting sort
     void interationSort();
     //sort all with selection sort
@@ -261,6 +263,18 @@ template <typename T> void List<T>::traverse()
     std::cout<<std::endl;
 }
 
+template <typename T> void visit(T& data)
+{
+    std::cout<<"visit data: "<<data<<std::endl;
+}
+
+template <typename T> struct Visit{
+    //const is required.
+    virtual void operator()(T data) const{
+        std::cout<<"visit data: "<<data<<std::endl;
+    }
+};
+
 template <typename T> void List<T>::traverse(void (*visit) (T&))
 {
     for(ListNode<T>* p = this->header->next; p != trailer; p = p->next){
@@ -269,27 +283,12 @@ template <typename T> void List<T>::traverse(void (*visit) (T&))
 }
 
 template <typename T> template <typename VST>
-void List<T>::traverse(VST& visit)
+void List<T>::traverse(const VST& visit)
 {
     for(ListNode<T>* p = this->header->next; p != trailer; p = p->next){
         visit(p->data);
     }
 }
-
-template <typename T>
-void visit(T data)
-{
-    std::cout<<"visit data: "<<data<<std::endl;
-}
-/*
-template <typename T>
-struct visit{
-    public:
-    void operator()(T data){
-        std::cout<<"op visit data: "<<data<<std::endl;
-    }
-};
-*/
 
 template <typename T> void List<T>::uniquity()
 {
@@ -533,6 +532,7 @@ void testBasicOperations()
     phones->deduplicate();
 
     phones->traverse(visit);
+    phones->traverse(Visit<string>());
 
     delete phones;
     delete copyphones;
