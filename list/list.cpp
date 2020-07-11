@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
+#include <cmath>
 using namespace std;
-//template<typename T> typedef ListNode<T> ListNode<T>;
+
 template <class T>
 struct ListNode{
     //member data
@@ -12,7 +13,7 @@ struct ListNode{
     ListNode<T>(){}
     ListNode<T>(T e, ListNode<T> *prev = NULL, ListNode<T> *next = NULL):
         data(e), prev(prev), next(next){}
-    //ops
+
     //insert a node of e as the prev of this node.
     ListNode<T>* insertAsPrev(T e) {
         ListNode<T> *xnode = new ListNode<T>(e, prev, this);
@@ -20,14 +21,14 @@ struct ListNode{
         prev->next = xnode;//for pre node, its next node is xnode
         prev = xnode;//for this node, pred node is xnode.
         return xnode;
-        }
+    }
     //insert a node of e as the next of this node.
     ListNode<T>* insertAsSucc(T e) {
         ListNode<T> *xnode = new ListNode<T>(e, this, next);
         next->prev = xnode;
         next = xnode;
         return xnode;
-        }
+    }
 };
 
 template <typename T> class List{
@@ -37,6 +38,7 @@ template <typename T> class List{
     protected:
     void init();
     void clear();
+    ListNode<T>* merge(int frontlen, int backlen, int startpos, ListNode<T>* startnode);
     public:
     //construct
     List(){init();};
@@ -54,23 +56,30 @@ template <typename T> class List{
     //find
     ListNode<T>* find(T e);
     ListNode<T>* find(T e, int n, ListNode<T>* p);
-    //In oreder list, find the last node whose data <= n
+    //In oreder list, find the last node whose data <= e
     ListNode<T>* search(T e, int n, ListNode<T>* p);
-    //deduplicate
+    //make elements unique in a non-sorting list
     int deduplicate();
-    //uniquity
+    //make elements unique in a sorting list
     void uniquity();
     //visit member by iterator
     void traverse();
     void traverse(void (*visit) (T&));
-    template <typename VST> void traverse(VST& visit);
+    template <typename VST> void traverse(VST& visit);//TODO
     //sort all with inserting sort
     void interationSort();
     //sort all with selection sort
     void selectionSort();
     void selectionSort_2(ListNode<T>* p, int n);
+    //sort all with merging sort
+    void mergeSort();
+    //void mergeSort_recurse(); //TODO
     //size
     int size(){return _size;}
+    //first node
+    ListNode<T> first() const {return *(header->next);}
+    //last node
+    ListNode<T> last() const {return *(trailer->prev);}
 };
 
 template <typename T> void List<T>::init(){
@@ -100,7 +109,7 @@ template <typename T> List<T>::List(List<T>* copylist)
 }
 
 //return type: void
-//return type: old size
+//optinal return type: old size
 template <typename T> void List<T>::clear()
 {
     while(_size > 0){//_size would be updated after remove ops.
@@ -380,6 +389,108 @@ template <typename T> void List<T>::selectionSort_2(ListNode<T>* p, int n)
     traverse();
 }
 
+//startnode indicates last node.
+template <typename T> ListNode<T>* List<T>::merge(int frontlen, int backlen, int startpos, ListNode<T> *startnode)
+{
+    ListNode<T> *lastnode;
+    ListNode<T> *ltnode = startnode;//startnode indicates last node.
+    ListNode<T> *midnode = startnode->next;
+    ListNode<T> *backnode = startnode->next;
+    ListNode<T> *frontnode = startnode->next;
+    int n = frontlen;
+    //find the middle node
+    while(n-- > 0) {
+        backnode = midnode = backnode->next;
+    }
+    ListNode<T>* tmpnode = NULL;
+    //compare nodes in header half list and trailer half list
+    while(frontlen >0 && backlen > 0) {
+        std::cout<<"front node ["<<frontnode<<"] data["<<frontnode->data<<\
+            "] backnode ["<<backnode<<"] data["<<backnode->data<<"] ";
+        printf("\n");
+        if (frontnode->data < backnode->data) {
+            std::cout<<"before insert. ltnode: "<<ltnode<<" ";
+            ltnode = insertAsSucc(ltnode, frontnode->data);
+            std::cout<<"after insert. ltnode: "<<ltnode<<" ";
+            tmpnode = frontnode;
+            frontnode = frontnode->next;
+            remove(tmpnode);
+            frontlen--;
+        } else {
+            ltnode = insertAsSucc(ltnode, backnode->data);
+            tmpnode = backnode;
+            backnode = backnode->next;
+            remove(tmpnode);
+            backlen--;
+        }
+        std::cout<<"one round merge:";
+        printf("\n");
+        traverse();
+    }
+    std::cout<<"residual fornt len "<<frontlen<<" residual back len "<<backlen;
+    printf("\n");
+    while(frontlen > 0) {
+        //copy residual front nodes to new list
+        ltnode = insertAsSucc(ltnode, frontnode->data);
+        tmpnode = frontnode;
+        frontnode = frontnode->next;
+        remove(tmpnode);
+        frontlen--;
+        std::cout<<"one round merge:";
+        printf("\n");
+        traverse();
+    }
+    while(backlen > 0) {
+        //copy residual backnodes to new list
+        ltnode = insertAsSucc(ltnode, backnode->data);
+        tmpnode = backnode;
+        backnode = backnode->next;
+        remove(tmpnode);
+        backlen--;
+        std::cout<<"one round merge:";
+        printf("\n");
+        traverse();
+    }
+    lastnode = ltnode;
+    return lastnode;
+}
+
+template <typename T> void List<T>::mergeSort()
+{
+    int seglen, startpos, frontlen, backlen;
+    int sz = this->size();
+    //boundary case: sz = 8, seglen=1, 2, 4 ; n = 9, seglen=1, 2, 4, 8, sz/2=4
+    for(seglen = 1; (2 * seglen <= sz) || (seglen < sz); seglen *= 2){ //demo: sz = 8, seglen = 1, 2, 4
+        ListNode<T> *p = header;
+        //merge all segments of list, number: sz / (seglen * 2)
+        //if sz = 7, seglen = 1, num = 7 / 2 = 3.5 = 4, i = 2, num = 7 / 4 = 2
+        //if sz = 8, seglen = 1, num = 8 / 2 = 4, seglen = 2, num = 8 / 4 = 2
+        //boundary case: sz=9 or 10,seglen=4,
+        for(startpos = 0; startpos < sz; startpos += 2 * seglen){
+            //set frontlen and backlen if sz - startpos < seglen
+            if (sz - startpos < 2 * seglen) {
+                if (sz - startpos >= seglen) {
+                    frontlen = seglen;
+                    backlen = sz - startpos - seglen;
+                } else {
+                    frontlen = sz - startpos;
+                    backlen = 0;
+                }
+            } else {
+                frontlen = backlen = seglen;
+            }
+
+            //merge a segment list, starting from node p with seglen
+            std::cout<<"seg len: "<<seglen<<" starting pos: "<<startpos<<" last node: "<<p;
+            printf("\n");
+            traverse();
+            p = merge(frontlen, backlen, startpos, p);//return type: last node
+            //seglen = 1, 2, ..., sz/2; startpos = 0,  0+seglen+seglen, ..., sz-2*seglen
+            traverse();
+        }
+    }
+}
+
 void testBasicOperations();
 void testInsertionSort();
 void testSelectionSort();
@@ -387,16 +498,8 @@ void testSelectionSort();
 void testSelectionSort_2();
 void testDeduplication();
 void testUniquition();
-
-int main(){
-    testBasicOperations();
-    testInsertionSort();
-    testSelectionSort();
-    testSelectionSort_2();
-    testDeduplication();
-    testUniquition();
-    return 0;
-}
+void testMergeSort();
+void testMergeSort_2();
 
 void testBasicOperations()
 {
@@ -510,6 +613,7 @@ void testSelectionSort_2()
     scorelist->traverse();
     delete scorelist;
 }
+
 void testDeduplication()
 {
    //build scores list
@@ -533,6 +637,7 @@ void testDeduplication()
     scorelist->traverse();
     delete scorelist;
 }
+
 void testUniquition()
 {
    //build scores list
@@ -555,4 +660,68 @@ void testUniquition()
     std::cout<<"Uniquity scorelist: "<<std::endl;
     scorelist->traverse();
     delete scorelist;
+}
+
+void testMergeSort()
+{
+   //build scores list
+   //initial scores: 80 80 85 86 86 90 95 96 96 100
+   //deduplicated scores: 80 85 86 90 95 96 100
+    List<int> *scorelist = new List<int>();
+    ListNode<int> *sl = scorelist->insertAsFirst(80);
+    sl = scorelist->insertAsSucc(sl, 80);
+    sl = scorelist->insertAsSucc(sl, 85);
+    sl = scorelist->insertAsSucc(sl, 86);
+    sl = scorelist->insertAsSucc(sl, 86);
+    sl = scorelist->insertAsSucc(sl, 90);
+    sl = scorelist->insertAsSucc(sl, 95);
+    sl = scorelist->insertAsSucc(sl, 96);
+    sl = scorelist->insertAsSucc(sl, 96);
+    sl = scorelist->insertAsSucc(sl, 100);
+    std::cout<<"Initial scorelist: ";
+    printf("\n");
+    scorelist->traverse();
+    scorelist->mergeSort();
+    std::cout<<"Sorted scorelist: ";
+    printf("\n");
+    scorelist->traverse();
+    delete scorelist;
+}
+
+void testMergeSort_2()
+{
+   //build scores list
+   //initial scores: 90 88 87 86 85 84 85 86 87
+   //sorted scores: 84 85 85 86 86 87 87 88 90
+    List<int> *scorelist = new List<int>();
+    ListNode<int> *sl = scorelist->insertAsFirst(90);
+    sl = scorelist->insertAsSucc(sl, 88);
+    sl = scorelist->insertAsSucc(sl, 87);
+    sl = scorelist->insertAsSucc(sl, 86);
+    sl = scorelist->insertAsSucc(sl, 85);
+    sl = scorelist->insertAsSucc(sl, 84);
+    sl = scorelist->insertAsSucc(sl, 85);
+    sl = scorelist->insertAsSucc(sl, 86);
+    sl = scorelist->insertAsSucc(sl, 87);
+    std::cout<<"Initial scorelist: ";
+    printf("\n");
+    scorelist->traverse();
+    scorelist->mergeSort();
+    std::cout<<"Sorted scorelist: ";
+    printf("\n");
+    scorelist->traverse();
+    delete scorelist;
+}
+
+int main()
+{
+    testBasicOperations();
+    testInsertionSort();
+    testSelectionSort();
+    testSelectionSort_2();
+    testDeduplication();
+    testUniquition();
+    testMergeSort();
+    testMergeSort_2();
+    return 0;
 }
