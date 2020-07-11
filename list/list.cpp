@@ -269,7 +269,7 @@ template <typename T> void visit(T& data)
 }
 
 template <typename T> struct Visit{
-    //const is required.
+    //const is required. const modified class member function.
     virtual void operator()(T data) const{
         std::cout<<"visit data: "<<data<<std::endl;
     }
