@@ -111,10 +111,18 @@ public:
         lt = boys->header;
         std::cout<<"n: "<<n<<" m: "<<m<<"\n";
         //while size > 1, move m nodes and remove the target node
+        //It is hard to determine loop num
+        //For example, 6 kids, m = 5, the 5-th kid out. move 5-1 step from header
+        //6 kids, m = 6, the 6-th kid out, move 6-1 step from header
+        //6 kids, m = 7, the 7-6= 1 th kid out, mvoe 1-1 step from header
         while(boys->size() > 1) {
-            int loopnum = m - 1;
+            //if m = size, remove the last one
+            //if m % size = 0 && m > size, remove the last one
+            int loopnum = m;
+            if(m > boys->size()) loopnum = m % boys->size();
+            if (loopnum == 0) loopnum = boys->size();
             std::cout<<"lt: "<<lt<<" size: "<<boys->size()<<" data: "<<lt->data<<"\n";
-            while(loopnum > 0) {
+            while(loopnum > 1) {
                 if (!lt->next) std::cout<<"NULL lt->next!!!!"<<"\n";
                 std::cout<<"lt next: "<<lt->next<<"\n";
                 lt = lt->next;
@@ -137,6 +145,7 @@ int main()
     Solution *s = new Solution();
     s->LastRemaining_Solution(5, 3);
     s->LastRemaining_Solution(0, 0);
+    s->LastRemaining_Solution(6, 6);
     delete s;
     return 0;
 }
