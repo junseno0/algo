@@ -76,6 +76,10 @@ template <typename T> class List{
     //sort all with merging sort
     void mergeSort();
     //void mergeSort_recurse(); //TODO
+    //reverse all elements
+    void reverse();
+    void reverse_with_swap();
+    void reverse_with_switch();
     //size
     int size(){return _size;}
     //first node
@@ -490,6 +494,64 @@ template <typename T> void List<T>::mergeSort()
     }
 }
 
+template <typename T> void List<T>::reverse()
+{
+    if(size() < 2)  return;
+    ListNode<T> *frontnode = header->next;
+    ListNode<T> *backnode = trailer->prev;
+    int n = size();
+    //teminate case
+    //if node number is odd, teminate with frontnode = backnode
+    //if node number is even, teminate with frontnode->prev = backnode->next ?? TODO DEBUG
+    while(n > 1) {  //for loop is ok too.
+        //CHECK(fontnode);
+        //CHECK(backnode);
+        insertAsPrev(frontnode, backnode->data);
+        insertAsSucc(backnode, frontnode->data);
+        remove((frontnode = frontnode->next)->prev);
+        remove((backnode = backnode->prev)->next);
+        n -= 2;
+        std::cout<<"Reverse one round: ";
+        printf("\n");
+        traverse();
+    }
+}
+
+template <typename T> void List<T>::reverse_with_swap()
+{
+    if(size() < 2)  return;
+    ListNode<T> *frontnode = header;
+    ListNode<T> *backnode = trailer;
+    for(int i = 0; i < size(); i += 2) {
+        //CHECK(fontnode);
+        //CHECK(backnode);
+        swap((frontnode = frontnode->next)->data, (backnode = backnode->prev)->data);
+        std::cout<<"Reverse one round: ";
+        printf("\n");
+        traverse();
+    }
+}
+
+template <typename T> void List<T>::reverse_with_switch()
+{
+    if(size() < 2)  return;
+    ListNode<T> *lt = header;
+    for(int i = 0; i < size() + 2; i++) {
+        //CHECK(fontnode);
+        //CHECK(backnode);
+        //swap lt prev and next
+        swap(lt->prev, lt->next);
+        lt = lt->prev;
+    }
+    /*
+    for (lt = header; lt; lt = lt=>prev) {  //solution in book
+        swap(lt->prev, lt->next);
+    }
+    */
+
+    swap(header, trailer);
+}
+
 void testBasicOperations();
 void testInsertionSort();
 void testSelectionSort();
@@ -499,6 +561,7 @@ void testDeduplication();
 void testUniquition();
 void testMergeSort();
 void testMergeSort_2();
+void testReverse();
 
 void testBasicOperations()
 {
@@ -713,6 +776,37 @@ void testMergeSort_2()
     delete scorelist;
 }
 
+void testReverse()
+{
+    //build scores list
+    //initial scores: 80 85 90 95 100
+    //sorted scores: 100 95 90 85 80
+    //initial scores: 80 85 90 95
+    //sorted scores: 95 90 85 80
+    List<int> *scorelist = new List<int>();
+    ListNode<int> *sl = scorelist->insertAsFirst(80);
+    sl = scorelist->insertAsSucc(sl, 85);
+    sl = scorelist->insertAsSucc(sl, 90);
+    sl = scorelist->insertAsSucc(sl, 95);
+    //sl = scorelist->insertAsSucc(sl, 100);
+    std::cout<<"Initial scorelist: ";
+    printf("\n");
+    scorelist->traverse();
+    scorelist->reverse();
+    std::cout<<"Reversed scorelist: ";
+    printf("\n");
+    scorelist->traverse();
+    scorelist->reverse_with_swap();
+    std::cout<<"Reversed scorelist with swap: ";
+    printf("\n");
+    scorelist->traverse();
+    scorelist->reverse_with_switch();
+    std::cout<<"Reversed scorelist with switch: ";
+    printf("\n");
+    scorelist->traverse();
+    delete scorelist;
+}
+
 int main()
 {
     testBasicOperations();
@@ -723,5 +817,6 @@ int main()
     testUniquition();
     testMergeSort();
     testMergeSort_2();
+    testReverse();
     return 0;
 }
