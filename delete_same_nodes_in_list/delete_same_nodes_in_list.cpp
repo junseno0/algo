@@ -79,6 +79,36 @@ public:
     }
 };
 
+class Solution_by_direct_delete_simple {
+public:
+    ListNode* deleteDuplication(ListNode* pHead)
+    {
+        ListNode *header = new ListNode(0);
+        header->next = pHead;
+        if(pHead == NULL) return NULL;
+        ListNode *prev = header;
+        ListNode *curr = pHead;
+        while(curr) {
+            if (curr->next && curr->val == curr->next->val) {
+                while(curr->next && curr->val == curr->next->val) {
+                    curr = curr->next;
+                }
+                //TODO
+                //delete node between prev and curr->next, NOT include prev&curr->next
+                curr = curr->next;
+                prev->next = curr;
+            } else {
+                prev = curr;
+                curr = curr->next;
+            }
+        }
+
+        ListNode *p = header->next;
+        delete header;
+        return p;
+    }
+};
+
 class Solution_by_set {
 public:
     ListNode* deleteDuplication(ListNode* pHead)
@@ -87,7 +117,7 @@ public:
         ListNode *header = new ListNode(0);
         header->next = pHead;
         if(pHead == NULL) return NULL;
-        
+
         //find repeated nodes, insert in set
         std::set<int> st;
         while(lt && lt->next) {
@@ -111,7 +141,7 @@ public:
                 prev = prev->next;
             }
         }
-        
+
         //if repeated nodes in tail, prev node as tail node
         ListNode *p = header->next;
         delete header;
@@ -140,17 +170,20 @@ int main()
         lt->next = new ListNode(7);
     }
 
-
-    //find entry node
     Solution_by_direct_delete *s = new Solution_by_direct_delete();
     ListNode *p = s->deleteDuplication(header);
     std::cout<<"after deleting duplications by direct delete, header is "<<p<<"\n";
     delete s;
 
+    Solution_by_direct_delete_simple *s_simple = new Solution_by_direct_delete_simple();
+    p = s_simple->deleteDuplication(header);
+    std::cout<<"after deleting duplications by simple direct delete, header is "<<p<<"\n";
+    delete s_simple;
+
     Solution_by_set *st = new Solution_by_set();
     p = st->deleteDuplication(header);
     std::cout<<"after deleting duplications by set, header is "<<p<<"\n";
-    delete s;
+    delete st;
 
     //delete list
     lt = header;
