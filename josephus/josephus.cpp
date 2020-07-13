@@ -12,6 +12,9 @@ HF作为牛客的资深元老,自然也准备了一些小游戏。其中,有个�
 */
 #include <string>
 #include <iostream>
+#include <list>
+#include <algorithm>
+
 namespace Bob{
 //define node list with prev and next, data(int)
 //define construct method with n
@@ -140,6 +143,47 @@ public:
     }
 };
 
+class Solution_stl {
+public:
+    int LastRemaining_Solution(int n, int m)
+    {
+        //check n and m
+        if (n < 1 || m < 1) return -1;
+        //return if only one node and two node
+        if (n == 1) return 1;
+        if (n == 2) return m % 2 ? 1 : 2;
+
+        //construct a list with n nodes
+        std::list<int> boys;
+        for(int i = 0; i < n; i++) boys.push_back(i);
+        for(std::list<int>::iterator it = boys.begin(); it != boys.end(); it++)
+            std::cout<<*it;
+        std::cout<<"\n";
+        std::list<int>::iterator lt = boys.begin();
+        while(boys.size() > 1) {
+            //if m = size, remove the last one
+            //if m % size = 0 && m > size, remove the last one
+            int loopnum = m;
+            while(loopnum > 1) {
+                if (++lt == boys.end()) {
+                    lt = boys.begin();
+                } else {
+                    //lt++; //increase in if statement
+                }
+                loopnum--;
+            }
+            lt = boys.erase(lt);
+            if(lt == boys.end()) {
+                lt = boys.begin();
+            }
+
+        }
+        int val = *lt;
+        //return data/number when only one node
+        return val;
+    }
+};
+
 int main()
 {
     Solution *s = new Solution();
@@ -147,5 +191,11 @@ int main()
     s->LastRemaining_Solution(0, 0);
     s->LastRemaining_Solution(6, 6);
     delete s;
+
+    Solution_stl *sl = new Solution_stl();
+    sl->LastRemaining_Solution(5, 3);
+    sl->LastRemaining_Solution(0, 0);
+    sl->LastRemaining_Solution(6, 6);
+    delete sl;
     return 0;
 }
