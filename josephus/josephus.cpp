@@ -208,6 +208,20 @@ public:
     }
 };
 
+/*
+Formulas deviration: refer to https://blog.csdn.net/SCS199411/article/details/92988332
+*/
+class Solution_stl_recursion {
+public:
+    int LastRemaining_Solution(int n, int m)
+    {
+        if (n <= 0) return -1;
+        if (n == 1) return  0;
+        return (LastRemaining_Solution(n-1, m) + m) % n;
+
+    }
+};
+
 int main()
 {
     int val = 0;
@@ -232,6 +246,14 @@ int main()
     val = sl_nk->LastRemaining_Solution(6, 6);
     std::cout<<"sl_nk->LastRemaining_Solution(6, 6): "<<val<<"\n";
     delete sl_nk;
+
+    Solution_stl_recursion *sl_re = new Solution_stl_recursion();
+    val = sl_re->LastRemaining_Solution(5, 3);
+    std::cout<<"sl_nk->LastRemaining_Solution(5, 3): "<<val<<"\n";
+    val = sl_re->LastRemaining_Solution(0, 0);
+    val = sl_re->LastRemaining_Solution(6, 6);
+    std::cout<<"sl_nk->LastRemaining_Solution(6, 6): "<<val<<"\n";
+    delete sl_re;
 
     return 0;
 }
