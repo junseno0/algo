@@ -211,7 +211,7 @@ public:
 /*
 Formulas deviration: refer to https://blog.csdn.net/SCS199411/article/details/92988332
 */
-class Solution_stl_recursion {
+class Solution_recursion {
 public:
     int LastRemaining_Solution(int n, int m)
     {
@@ -219,6 +219,22 @@ public:
         if (n == 1) return  0;
         return (LastRemaining_Solution(n-1, m) + m) % n;
 
+    }
+};
+
+class Solution_iteration {
+public:
+    int LastRemaining_Solution(int n, int m)
+    {
+        if (n <= 0) return -1;
+        if (n == 1) return  0;
+        int val = 0;
+        int iter = 2;
+        while(iter <= n) {
+            val = (val + m) % iter;
+            iter++;
+        }
+        return val;
     }
 };
 
@@ -247,13 +263,21 @@ int main()
     std::cout<<"sl_nk->LastRemaining_Solution(6, 6): "<<val<<"\n";
     delete sl_nk;
 
-    Solution_stl_recursion *sl_re = new Solution_stl_recursion();
+    Solution_recursion *sl_re = new Solution_recursion();
     val = sl_re->LastRemaining_Solution(5, 3);
     std::cout<<"sl_nk->LastRemaining_Solution(5, 3): "<<val<<"\n";
     val = sl_re->LastRemaining_Solution(0, 0);
     val = sl_re->LastRemaining_Solution(6, 6);
     std::cout<<"sl_nk->LastRemaining_Solution(6, 6): "<<val<<"\n";
     delete sl_re;
+
+    Solution_iteration *sl_iter = new Solution_iteration();
+    val = sl_iter->LastRemaining_Solution(5, 3);
+    std::cout<<"sl_nk->LastRemaining_Solution(5, 3): "<<val<<"\n";
+    val = sl_iter->LastRemaining_Solution(0, 0);
+    val = sl_iter->LastRemaining_Solution(6, 6);
+    std::cout<<"sl_nk->LastRemaining_Solution(6, 6): "<<val<<"\n";
+    delete sl_iter;
 
     return 0;
 }
