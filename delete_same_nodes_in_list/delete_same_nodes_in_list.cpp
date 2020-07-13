@@ -17,7 +17,7 @@ struct ListNode {
     }
 };
 
-class Solution {
+class Solution_by_direct_delete {
 public:
     ListNode* searchDiffNode(ListNode* startNode){
         if(startNode == NULL) return NULL;
@@ -79,6 +79,46 @@ public:
     }
 };
 
+class Solution_by_set {
+public:
+    ListNode* deleteDuplication(ListNode* pHead)
+    {
+        ListNode *lt = pHead;
+        ListNode *header = new ListNode(0);
+        header->next = pHead;
+        if(pHead == NULL) return NULL;
+        
+        //find repeated nodes, insert in set
+        std::set<int> st;
+        while(lt && lt->next) {
+            if(lt->val == lt->next->val) {
+                st.insert(lt->val);
+            }
+            lt = lt->next;
+        }
+        //traverse, delete found nodes
+        lt = pHead;
+        ListNode *prev = header;
+        ListNode *tmp = NULL;
+        while(lt) {
+            if(st.find(lt->val) != st.end()) {
+                tmp = lt;
+                prev->next = lt->next;
+                delete tmp;
+                lt = prev->next;
+            } else {
+                lt = lt->next;
+                prev = prev->next;
+            }
+        }
+        
+        //if repeated nodes in tail, prev node as tail node
+        ListNode *p = header->next;
+        delete header;
+        return p;
+    }
+};
+
 int main()
 {
     int n = 7;
@@ -102,9 +142,14 @@ int main()
 
 
     //find entry node
-    Solution *s = new Solution();
+    Solution_by_direct_delete *s = new Solution_by_direct_delete();
     ListNode *p = s->deleteDuplication(header);
-    std::cout<<"after deleting duplications, header is "<<p<<"\n";
+    std::cout<<"after deleting duplications by direct delete, header is "<<p<<"\n";
+    delete s;
+
+    Solution_by_set *st = new Solution_by_set();
+    p = st->deleteDuplication(header);
+    std::cout<<"after deleting duplications by set, header is "<<p<<"\n";
     delete s;
 
     //delete list
