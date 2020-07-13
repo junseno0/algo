@@ -157,7 +157,7 @@ public:
         std::list<int> boys;
         for(int i = 0; i < n; i++) boys.push_back(i);
         for(std::list<int>::iterator it = boys.begin(); it != boys.end(); it++)
-            std::cout<<*it;
+            std::cout<<*it<<" ";
         std::cout<<"\n";
         std::list<int>::iterator lt = boys.begin();
         while(boys.size() > 1) {
@@ -184,8 +184,33 @@ public:
     }
 };
 
+class Solution_stl_nk {
+public:
+    int LastRemaining_Solution(int n, int m)
+    {
+        if (n <= 0) return -1;
+        std::list<int> lt;
+        for (int i=0; i<n; ++i)
+            lt.push_back(i);
+        int index = 0;
+        while (n > 1) {
+            index = (index + m - 1) % n;//math induction
+            std::list<int>::iterator it = lt.begin();
+            std::advance(it, index);//std::advance, see also std::prev, next, distance
+            lt.erase(it);
+            --n;
+            for(std::list<int>::iterator i = lt.begin(); i != lt.end(); i++)
+                std::cout<<*i<<" ";
+            std::cout<<"\n";
+        }
+        std::cout<<"lt front: "<<lt.front()<<" lt back: "<<lt.back()<<"\n";
+        return lt.back();
+    }
+};
+
 int main()
 {
+    int val = 0;
     Solution *s = new Solution();
     s->LastRemaining_Solution(5, 3);
     s->LastRemaining_Solution(0, 0);
@@ -193,9 +218,20 @@ int main()
     delete s;
 
     Solution_stl *sl = new Solution_stl();
-    sl->LastRemaining_Solution(5, 3);
-    sl->LastRemaining_Solution(0, 0);
-    sl->LastRemaining_Solution(6, 6);
+    val = sl->LastRemaining_Solution(5, 3);
+    std::cout<<"sl->LastRemaining_Solution(5, 3): "<<val<<"\n";
+    val = sl->LastRemaining_Solution(0, 0);
+    val = sl->LastRemaining_Solution(6, 6);
+    std::cout<<"sl->LastRemaining_Solution(6, 6): "<<val<<"\n";
     delete sl;
+
+    Solution_stl_nk *sl_nk = new Solution_stl_nk();
+    val = sl_nk->LastRemaining_Solution(5, 3);
+    std::cout<<"sl_nk->LastRemaining_Solution(5, 3): "<<val<<"\n";
+    val = sl_nk->LastRemaining_Solution(0, 0);
+    val = sl_nk->LastRemaining_Solution(6, 6);
+    std::cout<<"sl_nk->LastRemaining_Solution(6, 6): "<<val<<"\n";
+    delete sl_nk;
+
     return 0;
 }
