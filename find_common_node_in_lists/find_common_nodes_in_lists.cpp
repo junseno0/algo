@@ -18,6 +18,34 @@ struct ListNode {
 };
 
 /*
+使用遍历。暴力解法。
+*/
+class Solution_by_compare {
+public:
+    ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) {
+        if(!pHead1 || !pHead2) return NULL;
+        ListNode *lt1 = pHead1;
+        ListNode *lt2 = pHead2;
+        ListNode *foundnode = NULL;
+        while(lt1 != NULL) {
+            lt2 = pHead2;
+            while(lt2 != NULL) {
+                if(lt1 == lt2) {
+                    std::cout<<"found common node in list: "<<lt1<<"\n";
+                    foundnode = lt1;
+                    break;
+                }
+                if(foundnode) break;
+                lt2 = lt2->next;
+            }
+            lt1 = lt1->next;
+        }
+
+        return foundnode;
+    }
+};
+
+/*
 使用set。
 */
 class Solution_by_set {
@@ -72,6 +100,11 @@ int main()
     ListNode *p = st->FindFirstCommonNode(header1, header2);
     std::cout<<"found common node in list: "<<p<<"\n";
     delete st;
+
+    Solution_by_compare *sc = new Solution_by_compare();
+    p = sc->FindFirstCommonNode(header1, header2);
+    std::cout<<"found common node in list: "<<p<<"\n";
+    delete sc;
 
     //delete list
     lt = header1;
