@@ -136,7 +136,7 @@ public:
         ListNode *lt1 = pHead1;
         ListNode *lt2 = pHead2;
         ListNode *foundnode = NULL;
-        bool lt1pass = false;
+        bool lt1pass = false;//if none same nodes, at last lt1 == lt2 == NULL. to remove it.
         bool lt2pass = false;
         while(lt1 != lt2) {
             lt1 = lt1->next;
@@ -156,6 +156,18 @@ public:
         }
         if(lt1 == lt2) foundnode = lt1;
         return foundnode;
+    }
+};
+
+class Solution_by_two_pointers_nk {
+public:
+    ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) {
+        ListNode *ta = pHead1, *tb = pHead2;
+        while (ta != tb) {
+            ta = ta ? ta->next : pHead2;
+            tb = tb ? tb->next : pHead1;
+        }
+        return ta;
     }
 };
 
