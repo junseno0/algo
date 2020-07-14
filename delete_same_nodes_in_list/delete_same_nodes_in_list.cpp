@@ -79,6 +79,11 @@ public:
     }
 };
 
+/*
+在遍历单链表的时候，设置前节点与当前节点，检查当前节点与下一节点是否为相同值。
+如果相同，继续查找至不同值的下一节点，然后指针改变指向，前节点连接至下一不同节点。
+须注意，相同节点须删除内存。TODO状态。
+*/
 class Solution_by_direct_delete_simple {
 public:
     ListNode* deleteDuplication(ListNode* pHead)
@@ -109,6 +114,10 @@ public:
     }
 };
 
+/*
+使用set，暴力解法。
+显然如果能够知道重复的值是什么，然后再遍历一次单链表，删除重复值即可。
+*/
 class Solution_by_set {
 public:
     ListNode* deleteDuplication(ListNode* pHead)
