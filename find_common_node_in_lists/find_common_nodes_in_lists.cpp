@@ -119,6 +119,46 @@ public:
     }
 };
 
+/*
+链接：https://www.nowcoder.com/questionTerminal/6ab1d9a29e88450685099d45c9e31e46?answerType=1&f=discussion
+来源：牛客网
+
+双指针法。创建两个指针p1和p2,分别指向两个链表的头结点，然后依次往后遍历。
+如果某个指针到达末尾，则将该指针指向另一个链表的头结点；如果两个指针所指的节点相同，则循环结束，返回当前指针指向的节点。
+比如两个链表分别为：1->3->4->5->6和2->7->8->9->5->6。短链表的指针p1会先到达尾部，然后重新指向长链表头部，
+当长链表的指针p2到达尾部时，重新指向短链表头部，此时p1在长链表中已经多走了k步(k为两个链表的长度差值)，
+p1和p2位于同一起跑线，往后遍历找到相同节点即可。其实该方法主要就是用链表循环的方式替代了长链表指针先走k步这一步骤。
+*/
+class Solution_by_two_pointers {
+public:
+    ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) {
+        if(!pHead1 || !pHead2) return NULL;
+        ListNode *lt1 = pHead1;
+        ListNode *lt2 = pHead2;
+        ListNode *foundnode = NULL;
+        bool lt1pass = false;
+        bool lt2pass = false;
+        while(lt1 != lt2) {
+            lt1 = lt1->next;
+            if(lt1pass && lt1 == NULL) break;
+            if(lt1 == NULL) {
+                lt1 = pHead2;
+                lt1pass = true;
+            }
+            //if lt1 pass list2, then no common node
+            lt2 = lt2->next;
+            if(lt2pass && lt2 == NULL) break;
+            if(lt2 == NULL) {
+                lt2 = pHead1;
+                lt2pass = true;
+            }
+            //if lt1 pass list2, then no common node
+        }
+        if(lt1 == lt2) foundnode = lt1;
+        return foundnode;
+    }
+};
+
 int main()
 {
     int n = 7;
@@ -156,7 +196,12 @@ int main()
     p = sr->FindFirstCommonNode(header1, header2);
     std::cout<<"found common node in list by fast and slow runners: "<<p<<"\n";
     delete sr;
- 
+
+    Solution_by_two_pointers *ss = new Solution_by_two_pointers();
+    p = ss->FindFirstCommonNode(header1, header2);
+    std::cout<<"found common node in list by two pointers: "<<p<<"\n";
+    delete ss;
+
     //delete list
     lt = header1;
     ListNode *tmp;
