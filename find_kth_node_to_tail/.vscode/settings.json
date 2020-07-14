@@ -1,0 +1,8 @@
+{
+    "C_Cpp.errorSquiggles": "Disabled",
+    "files.associations": {
+        "streambuf": "cpp",
+        "ostream": "cpp",
+        "new": "cpp"
+    }
+}
