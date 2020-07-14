@@ -6,6 +6,7 @@
 #include <iterator>
 #include <set>
 #include <unordered_set>
+#include <stack>
 /*
 输入两个链表，找出它们的第一个公共结点。
 */
@@ -171,6 +172,39 @@ public:
     }
 };
 
+/*
+stack解法：
+两个链表先分别进栈
+再依次出栈，从后向前遍历遇到第一个不相等的节点
+返回上一个相同节点即可
+
+*/
+class Solution_by_stack {
+public:
+    ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) {
+        if(!pHead1 || !pHead2) return NULL;
+        ListNode *lt1 = pHead1;
+        ListNode *lt2 = pHead2;
+        ListNode *foundnode = NULL;
+        std::stack<ListNode*> st1;
+        std::stack<ListNode*> st2;
+        while(lt1) {
+            st1.push(lt1);
+            lt1 = lt1->next;
+        }
+        while(lt2) {
+            st2.push(lt2);
+            lt2 = lt2->next;
+        }
+        while(!st1.empty() && !st2.empty() && st1.top() == st2.top()) {
+            foundnode = st1.top();
+            st1.pop();
+            st2.pop();
+        }
+        return foundnode;
+    }
+};
+
 int main()
 {
     int n = 7;
@@ -213,6 +247,11 @@ int main()
     p = ss->FindFirstCommonNode(header1, header2);
     std::cout<<"found common node in list by two pointers: "<<p<<"\n";
     delete ss;
+
+    Solution_by_stack *sk = new Solution_by_stack();
+    p = sk->FindFirstCommonNode(header1, header2);
+    std::cout<<"found common node in list by stack: "<<p<<"\n";
+    delete sk;
 
     //delete list
     lt = header1;
