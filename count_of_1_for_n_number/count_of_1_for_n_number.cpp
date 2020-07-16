@@ -123,5 +123,8 @@ int main()
     Solution_by_Krahets_idea *st = new Solution_by_Krahets_idea();
     n = st->NumberOf1Between1AndN_Solution(321);
     std::cout<<"count solved by Krahets_idea: "<<n<<"\n";
+
+    delete sl;
+    delete st;
     return 0;
 }
