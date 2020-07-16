@@ -51,6 +51,43 @@ public:
 };
 
 /*
+* Similar with Solution_by_traversal_binary_search
+* Binary search function is coded manually.
+*/
+// Time complexity: O(mlogn). Space complexity: O(1)
+class Solution_by_traversal_binary_search_v2 {
+public:
+    bool binarySearch(std::vector<int> array, int size, int target) {
+        //check
+        //[left, right]
+        int left = 0;
+        int right = size - 1;
+        int mid = 0;
+        while(left <= right) { // attention : <= , trick here, since mid+1 or mid-1
+            if(array.at(left) > target || array.at(right) < target) break;
+            if(array.at(left) == target || array.at(right) == target) return true;
+            //!!! It's NOT okay to set mid = left + (right - left) >> 1
+            mid = (left + right) / 2;
+            if (array.at(mid) == target) return true;
+            else if (array.at(mid) < target) left = mid + 1;
+            else if (array.at(mid) > target) right = mid - 1;
+        }
+        return false;
+    }
+    bool Find(int target, std::vector<std::vector<int> > array) {
+        //check
+        if(array.empty() || array.at(0).empty()) return false;
+        //for each row, search target with binary search method.
+        int row = array.size();
+        int col = array.at(0).size();
+        for(int i = 0; i < row; i++) {
+            if(binarySearch(array.at(i), col, target)) return true;
+        }
+        return false;
+    }
+};
+
+/*
 * 二分查找
 * 直接按照一维数组的二分法，则二分之后，无法确定下一次二分应该往哪边分，由此无法进行二分下去。
 * 如果我们找个位置，每次都能确定的往哪个部分二分，即可达到我们想要的结果。
@@ -84,7 +121,7 @@ public:
 
 int main()
 {
-    int target = 24;
+    int target = 4;
     std::vector<std::vector<int>> row;
     std::vector<int> col1, col2;
     col1.push_back(1);
@@ -95,12 +132,19 @@ int main()
     col2.push_back(6);
     row.push_back(col1);
     row.push_back(col2);
+
     Solution_by_traversal_binary_search *sl = new Solution_by_traversal_binary_search();
     bool found = sl->Find(target, row);
+
+    Solution_by_traversal_binary_search_v2 *sv = new Solution_by_traversal_binary_search_v2();
+    found = sv->Find(target, row);
+
     Solution_by_matrix_binary_search *st = new Solution_by_matrix_binary_search();
     found = st->Find(target, row);
     (void) found;
+
     delete sl;
+    delete sv;
     delete st;
     return 0;
 }
