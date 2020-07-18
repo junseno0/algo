@@ -114,6 +114,49 @@ public:
     }
 };
 
+/*
+链接：https://www.nowcoder.com/questionTerminal/70610bf967994b22bb1c26f9ae901fa2?answerType=1&f=discussion
+来源：牛客网
+
+public class Solution {
+
+    private int upper_bound(int[] array, int val) {
+        int l = 0, r = array.length - 1, mid;
+        while (l <= r) {
+            mid = (l + r) >> 1;
+            if (array[mid] <= val) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        return l;
+    }
+
+    private int lower_bound(int[] array, int val) {
+        int l = 0, r = array.length - 1, mid;
+        while (l <= r) {
+            mid = (l + r) >> 1;
+            if (array[mid] < val) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        return l;
+    }
+
+    public int GetNumberOfK(int[] array, int k) {
+        if (array == null || array.length == 0) {
+            return 0;
+        }
+        int lowerIndex = lower_bound(array, k);
+        int upperIndex = upper_bound(array, k);
+        return upperIndex - lowerIndex;
+    }
+}
+*/
+
 class Solution_by_binary_search_stl {
 public:
     int GetNumberOfK(std::vector<int> nums ,int target) {
