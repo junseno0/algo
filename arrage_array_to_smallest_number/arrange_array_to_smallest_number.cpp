@@ -84,6 +84,37 @@ public:
     }
 };
 
+class Solution_by_permutation_v1 {
+public:
+    std::string PrintMinNumber(std::vector<int> numbers) {
+        //check
+        std::string ret = "";
+        if(numbers.size() == 0) return ret;
+        //int to string
+        std::vector<std::string> st;
+        std::vector<std::vector<std::string>> stt;
+        std::sort(numbers.begin(), numbers.end());
+        for(unsigned int i = 0; i < numbers.size(); i++) {
+            st.push_back(std::to_string(numbers.at(i)));
+        }
+        do {
+            //TODO. pick out the minium here.
+            stt.push_back(st);
+        }while(std::next_permutation(st.begin(), st.end()));
+        std::vector<std::string> results;
+        for(auto iv : stt) {
+            ret = "";
+            for(auto it : iv) {
+                ret += it;
+            }
+            results.push_back(ret);
+        }
+        auto comp = [](std::string a, std::string b){return a + b < b + a;};
+        std::sort(results.begin(), results.end(), comp);
+        return results.at(0);
+    }
+};
+
 void traversevector(std::vector<int> &vt)
 {
     unsigned int i = 0;
@@ -105,9 +136,16 @@ int main()
     for(i = 0; i < vt.size(); i++) {
         str = st.PrintMinNumber(vt.at(i));
         traversevector(vt.at(i));
-        std::cout<<"PrintMinNumber. string : "<<str<<"\n";
+        std::cout<<"Solution_by_string_trick_v3. PrintMinNumber. string : "<<str<<"\n";
         std::cout<<"\n";
     }
-
+    vt = {vt1, vt2};
+    Solution_by_permutation_v1 sp;
+    for(i = 0; i < vt.size(); i++) {
+        str = sp.PrintMinNumber(vt.at(i));
+        traversevector(vt.at(i));
+        std::cout<<"Solution_by_permutation_v1. PrintMinNumber. string : "<<str<<"\n";
+        std::cout<<"\n";
+    }
     return 0;
 }
