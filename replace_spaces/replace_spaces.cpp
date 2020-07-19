@@ -19,6 +19,13 @@ Difficulty: 1 star
 Finished by self: yes
 */
 
+/*
+* 在当前字符串上进行替换。
+* 先计算替换后的字符串需要多大的空间，并对原字符串空间进行扩容；
+* 从后往前替换字符串的话，每个字符串只需要移动一次；
+* 如果从前往后，每个字符串需要多次移动，效率较低。
+*/
+// in-place method.
 class Solution_by_reconstruction {
 public:
 	void replaceSpace(char *str,int length) {
@@ -151,6 +158,10 @@ void* __cdecl memmove (void *dst, const void *src, size_t count)
 }
 */
 
+/*
+* 用一个string来存放新的字符串，遍历添加，如果是空格则添加“%20”。
+* 将string拷贝回原来的str空间。这个方法会花费O(n)空间，不划算。
+*/
 #include <string.h>
 class Solution_by_copy_string {
 public:
