@@ -12,7 +12,7 @@ Finished by self: yes
 */
 
 //Time complexity: O(logn)
-//Space complexity: O(1)
+//Space complexity: O(logn)
 class Solution_by_recursion {
 public:
     double Power(double base, int exponent) {
@@ -32,6 +32,8 @@ public:
     }
 };
 
+//Time complexity: O(logn)
+//Space complexity: O(1)
 class Solution_by_iteration {
 public:
     double Power(double base, int exponent) {
