@@ -27,6 +27,7 @@ public:
         if(it == vin.begin()) leftnull = true;
         if(it == vin.end() - 1) rightnull = true; 
         std::vector<int> leftvin, rightvin, leftpre, rightpre;
+        // You really should draw a graph to clearly determine the left and right position.
         if(!leftnull) leftvin.assign(vin.begin(), it);
         if(!rightnull) rightvin.assign (it+1, vin.end());
         if(!leftnull) leftpre.assign(pre.begin()+1, pre.begin()+1+leftvin.size());
