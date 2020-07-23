@@ -58,6 +58,29 @@ public:
     }
 };
 
+// This solution uses mid to set the section position. Save a lot of time compared with v1.
+class Solution_by_own_recursion_v2 {
+public:
+    TreeNode* reConstructBinaryTree(std::vector<int> pre, std::vector<int> vin) {
+        if(pre.size() == 0 || vin.size() == 0) return nullptr;
+        TreeNode *root = new TreeNode(pre.front());
+        if(pre.size() == 1) return root;
+        bool leftnull = false;
+        bool rightnull = false;
+        std::vector<int>::iterator mid = std::find(vin.begin(), vin.end(), pre.front());
+        std::vector<int> leftvin, rightvin, leftpre, rightpre;
+        // You really should draw a graph to clearly determine the left and right position.
+        int leftsize = mid - vin.begin();
+        leftpre.assign(pre.begin()+1, pre.begin()+leftsize+1);
+        rightpre.assign(pre.begin()+leftsize+1, pre.end());
+        leftvin.assign(vin.begin(), mid);
+        rightvin.assign(mid+1, vin.end());
+        root->left = reConstructBinaryTree(leftpre, leftvin);
+        root->right = reConstructBinaryTree(rightpre, rightvin);
+        return root;
+    }
+};
+
 class Solution_by_section_recursion {
 public:
     TreeNode *reBuildBinaryTree(std::vector<int> pre, std::vector<int> vin,
@@ -131,6 +154,22 @@ int main() {
 
     tr = nullptr;
 
+    Solution_by_own_recursion_v2 sr2;
+     pre = {1, 2, 4, 3, 5, 6};
+    vin = {4, 2, 1, 5, 3, 6};
+    tr = sr2.reConstructBinaryTree(pre, vin);
+    std::cout<<"Solution_by_own_recursion_v2. reConstructBinaryTree: "<<"\n";
+    travIn(tr, visit);
+    std::cout<<"\n";
+    pre = {1, 2, 3, 4, 5, 6, 7};
+    vin = {3, 2, 4, 1, 6, 5, 7};
+    tr = sr.reConstructBinaryTree(pre, vin);
+    std::cout<<"Solution_by_own_recursion_v2. reConstructBinaryTree: "<<"\n";
+    travIn(tr, visit);
+    std::cout<<"\n";
+
+    tr = nullptr;
+
     Solution_by_section_recursion ss;
     pre = {1, 2, 4, 3, 5, 6};
     vin = {4, 2, 1, 5, 3, 6};
@@ -144,5 +183,10 @@ int main() {
     tr = ss.reConstructBinaryTree(pre, vin);
     travIn(tr, visit);
     std::cout<<"\n";
+
+    std::vector<int> vt;
+    vt.push_back(3);
+    std::vector<int> vt2;
+    vt2.assign(vt.begin(), vt.begin());
     return 0;
 }
