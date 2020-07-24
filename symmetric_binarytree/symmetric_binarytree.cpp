@@ -21,7 +21,7 @@ struct TreeNode {
 	}
 };
  
-class Solution {
+class Solution_by_recursion {
 public:
     bool compare(TreeNode* p1, TreeNode* p2) {
         if(p1 == nullptr && p2 == nullptr) return true;
@@ -35,6 +35,84 @@ public:
         return compare(pRoot->left, pRoot->right);
     }
 
+};
+
+class Solution_by_iteration_v1 {
+public:
+    bool isSymmetrical(TreeNode* pRoot)
+    {
+        if(!pRoot) return true;
+        std::queue<TreeNode*> qt;
+        qt.push(pRoot->left);
+        qt.push(pRoot->right);
+        TreeNode* first = nullptr;
+        TreeNode* second = nullptr;
+        if(!pRoot->left && !pRoot->right) return true;
+        while(!qt.empty()) {
+            //push sequence, if valid
+            //left tree left, right tree right, same
+            //left tree right, right tree left, same
+            //break case
+            //pop and compare
+            //if two element not equal
+            //check if two at least
+            first = qt.front();
+            qt.pop();
+            second = qt.front();
+            qt.pop();
+            //check val equal
+            if(first && second && first->val != second->val) return false;
+            //if one of nullptr, false, we have ensure one not nullptr at least.
+            //在这里，我们的判断不等条件与推送到队列的判断条件耦合了，显示繁琐
+            //我们在判断都集中在一处，如果两个指针都为空，我们就进行下一轮的弹出与判断
+            //如果其中一个为空，则明显不等，返回失败
+            //同时，保证了在推送队列时，first, second都是非空的节点，就不需要再加判断条件了
+            //同时，如果一开始的左右节点都为空，再一下轮就队列为空了，避免了循环前的一次判断
+            //代码见Solution_by_iteration_v2
+            if(!(first && second)) return false;
+ 
+            if(first->left || second->right) {
+                qt.push(first->left);
+                qt.push(second->right);
+            }
+            if(first->right || second->left) {
+                qt.push(first->right);
+                qt.push(second->left);
+            }
+        }
+        return true;
+    }
+};
+
+class Solution_by_iteration_v2 {
+public:
+    bool isSymmetrical(TreeNode* pRoot)
+    {
+        if(!pRoot) return true;
+        std::queue<TreeNode*> qt;
+        qt.push(pRoot->left);
+        qt.push(pRoot->right);
+        TreeNode* first = nullptr;
+        TreeNode* second = nullptr;
+        while(!qt.empty()) {
+            first = qt.front();
+            qt.pop();
+            second = qt.front();
+            qt.pop();
+            //check val equal
+            if(!first && !second) continue;
+            if((!first || !second) || (first->val != second->val)) return false;
+            {
+                qt.push(first->left);
+                qt.push(second->right);
+            }
+            {
+                qt.push(first->right);
+                qt.push(second->left);
+            }
+        }
+        return true;
+    }
 };
 
 void visit(TreeNode* x) {
@@ -120,7 +198,9 @@ int main() {
     TreeNode* bt2 = contructBT2();
     TreeNode* bt3 = contructBT3();
     bool flag = false;
-    Solution sl;
+    //Solution_by_recursion sl;
+    //Solution_by_iteration_v1 sl;
+    Solution_by_iteration_v2 sl;
     std::vector<int> vt;
     std::cout<<"bt1 : "<<"\n";
     travIn(bt1, visit);
