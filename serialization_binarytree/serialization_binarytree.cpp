@@ -42,7 +42,7 @@ struct TreeNode {
 //在反序列化中，每取出一个节点，总会把其左右子节点推送到队列中，也形成
 //先上层节点再下层节点且1:2的关系，与字符串一一对应
 //另外搞不定的是，字符串的操作不熟悉，导致复杂的想法，如果熟悉STL string，且string与char
-//的转换，就容易操作字符串
+//的转换，加上atoi的trick，就容易操作字符串
 class Solution {
 public:
     char* Serialize(TreeNode *root) {    
@@ -101,6 +101,58 @@ public:
         return root;
     }
 };
+
+/*
+//链接：https://www.nowcoder.com/questionTerminal/cf7e25aa97c04cc1a68c8f040e71fb84?answerType=1&f=discussion
+//来源：牛客网
+//这代码采用递归的方式，清晰简单，而且，在字符串的操作也十分简单，值得学习
+class Solution {
+public:
+    string s;
+    int j=0;
+    void Srtial(TreeNode *root)
+    {
+        if(root==NULL)
+        {
+            s+="#!";
+            return ;
+        }
+        s+=to_string(root->val);
+        s+="!";
+        Srtial(root->left);
+        Srtial(root->right);
+    }
+    char* Serialize(TreeNode *root) {    
+        Srtial(root);
+        return (char *)s.data();
+    }
+    TreeNode* Deserialize(char *str) {
+        s=str;
+        return Deserial();
+    }
+    TreeNode* Deserial()
+    {
+        if(s.size()==0)
+            return NULL;
+        if(s[j]=='!') {
+            j++;
+            if(j>=s.size())
+                return NULL;    
+        }
+        if(s[j]=='#'){
+            j++;
+            return NULL;
+        }
+        int num=0;
+        while(s[j]>='0' && s[j]<='9'){
+        num=num*10+s[j++]-'0';}
+        TreeNode *root=new TreeNode(num);
+        root->left=Deserial();
+        root->right=Deserial();
+        return root;
+    }
+};
+*/
 
 void visit(TreeNode* x) {
     std::cout<<" ["<<x->val<<"] ";
