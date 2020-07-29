@@ -145,6 +145,97 @@ public:
     }
 };
 
+class MedianFinder_v2 {
+public:
+    std::vector<int> maxheap;
+    std::vector<int> minheap;
+    /** initialize your data structure here. */
+    MedianFinder_v2() {}
+    void _maxshiftup(int k) {
+        //parent node index: (k-1)/2
+        while((k > 0) && (maxheap[(k-1)/2] < maxheap[k])) {
+            std::swap(maxheap[(k-1)/2], maxheap[k]);
+            k = (k-1) / 2;
+        }
+    }
+    void _maxinsert(int val) {
+        maxheap.push_back(val);
+        _maxshiftup(maxheap.size()-1);
+    }
+    void _maxshiftdown(int index, int size) {
+        int k = index;
+        while( 2 * k + 1 < size) {
+            int j = 2 * k + 1;
+            if((j+1 < size) && (maxheap[j+1] > maxheap[j])) j++;
+            if(maxheap[k] > maxheap[j]) break;
+            std::swap(maxheap[k], maxheap[j]);
+            k = j;
+        }
+    }
+    int _delmax() {
+        int val = maxheap[0];
+        //replace front by back val and then erase back val
+        maxheap[0] =  maxheap[maxheap.size()-1];
+        maxheap.erase(maxheap.end()-1);
+        _maxshiftdown(0, maxheap.size());
+        return val;
+    }
+
+    void _minshiftup(int k) {
+        while((k > 0) && (minheap[(k-1)/2] > minheap[k])){
+            std::swap(minheap[(k-1)/2], minheap[k]);
+            k = (k-1) / 2;
+        }
+    }
+    void _mininsert(int val) {
+        minheap.push_back(val);
+        _minshiftup(minheap.size()-1);
+    }
+
+    void _minshiftdown(int index, int size) {
+        int k = index;
+        while(2 * k + 1 < size) {
+            int j = 2 * k + 1;
+            if((j+1 < size) && (minheap[j+1] < minheap[j])) j++;
+            if(minheap[k] < minheap[j]) break;
+            std::swap(minheap[k], minheap[j]);
+            k = j;          
+        }
+    }
+
+    int _delmin() {
+        int val = minheap[0];
+        minheap[0] = minheap[minheap.size()-1];
+        minheap.erase(minheap.end()-1);
+        _minshiftdown(0, minheap.size());
+        return val;
+    }
+    
+    void addNum(int num) {
+        if(maxheap.size() == minheap.size()) {
+            //add to min heap, before that, through max heap
+            _maxinsert(num);
+            num = _delmax();
+            _mininsert(num);
+        }
+        else if(maxheap.size() < minheap.size()) {
+            //add to max heap, before that, through min heap
+            _mininsert(num);
+            num = _delmin();
+            _maxinsert(num);
+        }
+    }
+    
+    double findMedian() {
+        //if max heap size = min heap size, average min and max
+        if(maxheap.size() == minheap.size())
+            return (double)( (double)maxheap[0] +  (double)minheap[0])/2;
+        //if not, min val is median val
+        else
+            return (double)minheap[0];
+    }
+};
+
 class MedianFinder_stl {
 public:
     std::priority_queue<int> maxheap;
@@ -189,14 +280,17 @@ public:
  */
 
 int main() {
-    MedianFinder obj;
+    MedianFinder_v2 obj;
     //MedianFinder_stl obj;
     double val = 0.0;
-    obj.addNum(1);
-    obj.addNum(2);
+    obj.addNum(-1);
+    obj.addNum(-2);
     val = obj.findMedian();
     std::cout<<"obj find median : "<<val<<"\n";
-    obj.addNum(3);
+    obj.addNum(-3);
+    val = obj.findMedian();
+    std::cout<<"obj find median : "<<val<<"\n";
+    obj.addNum(-4);
     val = obj.findMedian();
     std::cout<<"obj find median : "<<val<<"\n";
     return 0;
