@@ -81,9 +81,9 @@ public:
 int main() {
 
     //Solution sl;
-    Solution_v1 sl;
-    std::string s = "aab";
-    std::vector<std::vector<std::string>> vs = sl.partition(s);
+    Solution sl;
+    std::vector<int> vt = {1, 1, 2};
+    std::vector<std::vector<int>> vs = sl.permuteUnique(vt);
     for(auto itt: vs) {
         for(auto it: itt) {
             std::cout<<"["<<it<<"]";
