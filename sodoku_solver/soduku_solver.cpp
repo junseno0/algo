@@ -137,13 +137,6 @@ class Solution {
 int main() {
 
     Solution_v1 sl;
-    std::vector<std::vector<string>> res;
-    int n = 4;
-    res = sl.solveNQueens(4);
-    for(int i = 0; i < res.size(); i++) {
-        for(int j = 0; j < n; j++) 
-            std::cout<<res[i][j]<<"\n";
-        std::cout<<"\n";
-    }
+    //TODO
     return 0;
 }
