@@ -106,6 +106,68 @@ bool canPartition(vector<int>& nums) {
 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 */
 
+class Solution_DP_v1 {
+public:
+    bool canPartition(vector<int>& nums) {
+        int m = nums.size();
+        if(m < 1) return 0;
+        int sum = 0;
+        for(int i = 0; i < m; i++) {
+            sum += nums[i];
+        }
+        if(sum & 1) return false;
+        //dp
+        //state: f(n), n indicates a val/sum
+        //transfer func: f(n, sum) = f(n-1, sum) || f(n-1, sum-w(n))
+        sum /= 2;
+        vector<vector<bool>> dp(sum+1, vector<bool>(m, false));
+        std::sort(nums.begin(), nums.end());
+        if(nums.back() > sum) return false;
+        //when k = 0, nums[0] is picked
+        dp[nums[0]][0] = true;
+        for(int val = 1; val <= sum; val++) {
+            for(int k = 1; k < m; k++) {
+                if(val-nums[k] >= 0)
+                    dp[val][k] = dp[val][k-1] || dp[val-nums[k]][k-1];
+                else
+                    dp[val][k] = dp[val][k-1];
+            }
+        }
+
+        //return
+        return dp[sum][m-1];
+    }
+};
+
+/*唯一需要注意的是 val 应该从后往前反向遍历，因为每个物品（或者说数字）只能用一次，以免之前的结果影响其他的结果。*/
+class Solution_DP_v2 {
+public:
+    bool canPartition(vector<int>& nums) {
+        int m = nums.size();
+        if(m < 1) return 0;
+        int sum = 0;
+        for(int i = 0; i < m; i++) {
+            sum += nums[i];
+        }
+        if(sum & 1) return false;
+        //dp
+        //state: f(n), n indicates a val/sum
+        //transfer func: f(n, sum) = f(n-1, sum) || f(n-1, sum-w(n))
+        sum /= 2;
+        vector<bool> dp(sum+1, false);
+        dp[0] = true;
+        for(int k = 0; k < m; k++) {
+            for(int val = sum; val > 0; val--) {
+                if(val-nums[k] >= 0)
+                    dp[val] = dp[val] || dp[val-nums[k]];
+            }
+        }
+
+        //return
+        return dp[sum];
+    }
+};
+
 int main() {
     Solution_recursion sl;
     //std::vector<int> vt = {1, 5, 11, 5};//true
