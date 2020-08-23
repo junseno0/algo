@@ -42,21 +42,37 @@ public:
         if(!root) return 0;
         return std::max(depth(root->left), depth(root->right)) + 1;
     }
-    bool preOrder(TreeNode* root) {
-        if(std::abs(depth(root->left) - depth(root->right)) > 1) return false;
-        if(root->left && preOrder(root->left) == false) return false;
-        if(root->right && preOrder(root->right) == false) return false;
-        return true;
+    bool judge(TreeNode* root) {
+        if(!root) return true;
+        //visit root. preOrder visit.
+        return (abs(depth(root->left) - depth(root->right)) <= 1)
+            && judge(root->left) && judge(root->right);
     }
     bool IsBalanced_Solution(TreeNode* pRoot) {
         //check
         if(pRoot == nullptr) return true;
-        if(preOrder(pRoot) == false) return false;
-        return true;
+        return judge(pRoot);
     }
 };
 
-//TODO，优化解法，采用剪枝。
+//优化解法，在求高度的同时，判断，采用剪枝。
+//利用后序遍历：左子树、右子树、根节点,可以先递归到叶子节点，然后在回溯的过程中来判断是否满足条件。
+class Solution {
+public:
+    int depth(TreeNode *root) {
+        if (!root) return 0;
+        int ldep = depth(root->left);
+        if (ldep == -1) return -1;
+        int rdep = depth(root->right);
+        if (rdep == -1) return -1;
+        int sub = abs(ldep - rdep);
+        if (sub > 1) return -1;
+        return std::max(ldep, rdep) + 1;
+    }
+    bool IsBalanced_Solution(TreeNode* root) {
+        return depth(root) != -1;
+    }
+};
 
 void visit(TreeNode* x) {
     std::cout<<" ["<<x->val<<"] ";
