@@ -81,13 +81,7 @@ class Solution(object):
 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 */
 
-/*
-// 动态规划方法
-bool canPartition(vector<int>& nums) {
-    int sum = 0, n = nums.size();
-    for (int num : nums) sum += num;
-    if (sum % 2 != 0) return false;
-    sum = sum / 2;
+/*q
     vector<bool> dp(sum + 1, false);
     // base case
     dp[0] = true;
