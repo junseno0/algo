@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-10-09T06:45:48.889Z" agent="5.0 (Macintosh)" etag="3vNxdKqS-hN8qhrl-fQ8" version="20.4.0" type="github">
+<mxfile host="app.diagrams.net" modified="2022-10-09T06:57:08.549Z" agent="5.0 (Macintosh)" etag="NSc-VdMjKFE_hy2MT6WX" version="20.4.0" type="github">
   <diagram id="vO1amvy0kyj9_wai8O6I" name="Page-1">
     <mxGraphModel dx="2225" dy="1867" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -420,6 +420,24 @@
         </mxCell>
         <mxCell id="sgj0Pk3TnUekTyNWO7hc-25" value="&lt;div&gt;check jitter&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="805" y="800" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="sgj0Pk3TnUekTyNWO7hc-47" value="AsyncSock" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="310" y="950" width="140" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="sgj0Pk3TnUekTyNWO7hc-48" value="+ sock: int&#xa;+ mgr: AsyncSockMgr*&#xa;+ next: AsyncSock&#xa;+ mem:  MemEntry*&#xa; &#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;labelBackgroundColor=#FFFFFF;" vertex="1" parent="sgj0Pk3TnUekTyNWO7hc-47">
+          <mxGeometry y="26" width="140" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="sgj0Pk3TnUekTyNWO7hc-49" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;labelBackgroundColor=#FFFFFF;" vertex="1" parent="sgj0Pk3TnUekTyNWO7hc-47">
+          <mxGeometry y="100" width="140" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="sgj0Pk3TnUekTyNWO7hc-51" value="+ as_mgr_init" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;labelBackgroundColor=#FFFFFF;" vertex="1" parent="sgj0Pk3TnUekTyNWO7hc-47">
+          <mxGeometry y="108" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="sgj0Pk3TnUekTyNWO7hc-50" value="+ as_mgr_loop" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;labelBackgroundColor=#FFFFFF;" vertex="1" parent="sgj0Pk3TnUekTyNWO7hc-47">
+          <mxGeometry y="134" width="140" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="sgj0Pk3TnUekTyNWO7hc-52" value="+ as_mgr_destroy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;labelBackgroundColor=#FFFFFF;" vertex="1" parent="sgj0Pk3TnUekTyNWO7hc-47">
+          <mxGeometry y="162" width="140" height="28" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
